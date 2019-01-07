@@ -121,5 +121,3 @@ while True:
 	else:
 		print("[!] Invalid mode. Refreshing in "+str(rfdelay)+" seconds.")
 		time.sleep(rfdelay)
-
-# hooray.
