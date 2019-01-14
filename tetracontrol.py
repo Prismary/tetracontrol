@@ -1,21 +1,17 @@
 # - TETRACONTROL -
-# A Tetrapix controller software made by Prismary.
+# A Tetrapix controller software
 
-version = "0.0.1"
+version = "1.1.0"
 
 import requests
 import time
 import serial
 import json
+import datetime
 
-# Serial Commands
-# 'refresh' - Refreshes the image
-# 'data []' - Sends an image array
+print("   __       __                              __             __\n  / /____  / /__________ __________  ____  / /__________  / /\n / __/ _ \/ __/ ___/ __ `/ ___/ __ \/ __ \/ __/ ___/ __ \/ /\n/ /_/  __/ /_/ /  / /_/ / /__/ /_/ / / / / /_/ /  / /_/ / /\n\__/\___/\__/_/   \__,_/\___/\____/_/ /_/\__/_/   \____/_/")
 
-def sendscreen(data):
-	ser.write(b'data '+data)
-	
-print("-----------------------\n  tetracontrol v"+version+"\n-----------------------\n")
+print("[tetracontrol v"+version+"]\n// PrismArray Software (admin@prismarray.net)]\n\n")
 print("> Starting up...\n")
 print("Loading config...")
 errors = 0
@@ -78,46 +74,62 @@ if errors > 0:
 	print ("Please check 'config.txt' and restart tetracontrol.")
 	time.sleep(5)
 	exit()
-print("Config successfully loaded!\n")
+print("Config successfully loaded!")
+config.close()
 
-print("Establishing connection to controller device...")
+print("\nEstablishing connection to controller device...")
 time.sleep(2)
-serid = serial.Serial(sernumber, 9600)
+ser = serial.Serial(serid, 9600)
 print("Connection established.")
 
-print("\n[i] Done! Now running the display loop.\n")
+print("\n[i] Done! Now setting up the display loop.\n")
+
+def ctime():
+	return str(datetime.datetime.now())[11:19]
+
+def sendscreen(img):
+	for i in range(0,49):
+		for j in range(0,3):
+			ser.write(int(data["screendata"][img][i][j]))
 
 while True:
 	if readmode == "cloud":
 		try:
 			jsondata = requests.get(url).text
 			data = json.loads(jsondata)
+			print("[i] Server data loaded.")
 		except:
 			print("[!] Failed to get server data.")
 	else:
 		try:
-			jsondata = open(filename+".json","r")
-			data = json.loads(jsondata)
+			with open(filename,"r") as jsondata:
+				data = json.loads(jsondata)
+			print("[i] Local data loaded.")
 		except:
 			print("[!] Failed to get local data.")
 
 	mode = int(data["mode"])
 	delay = int(data["delay"])
 	imgcount = int(data["imgcount"])
+	print("[i] Starting up in mode "+str(mode)+".")
 	if mode == 0:
-		print("[i] Now running in mode "+str(mode)+".")
-		sendscreen(data[screendata][0])
+		print("["+ctime()+"] Updating display...")
+		sendscreen(0)
+		print("["+ctime()+"] Done!")
 		time.sleep(rfdelay)
-		print("[i] Refreshing server data.")
+		print("["+ctime()+"] Refreshing display data...")
 	elif mode == 1:
-		print("[i] Now running in mode "+str(mode)+".")
 		for i in range(0,10):
-			i2 = 0
-			while i2 < imgcount:
-				sendscreen(data[screendata][i2])
+			j = 0
+			while j < imgcount:
+				sendscreen(j)
 				time.sleep(delay)
-				i2 = i2+1
-		print("[i] Refreshing server data.")
+				j = j+1
+		print("[i] Refreshing display data.")
+	elif mode == 99:
+		print("[i] Now running in TEST mode.\n[!] This mode is for DEVELOPMENT ONLY!")
+		sendscreen(0)
+		time.sleep(5)
 	else:
 		print("[!] Invalid mode. Refreshing in "+str(rfdelay)+" seconds.")
 		time.sleep(rfdelay)
