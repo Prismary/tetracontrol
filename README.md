@@ -1,6 +1,6 @@
 # Tetracontrol
 
-An arduino script for converting and displaying images on an tetrapix display.
+An arduino script for converting and displaying images on a tetrapix display.
 
 ## Notes
 
