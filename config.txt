@@ -1,7 +1,0 @@
-## TETRACONTROL CONFIG ##
-
-serial-id: COM1
-read-mode: cloud
-filename: display.json
-url: http://cloud.prismarray.net/tetracontrol/display.json
-rf-delay: 60

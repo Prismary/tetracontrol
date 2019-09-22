@@ -1,2 +1,0 @@
-tetracontrol.py
-pause

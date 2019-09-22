@@ -8,8 +8,8 @@ int picDelay = 1000;
 //number of pictures to display in a row
 int picCount = 2;
 
-//pisc[num][pixel][r/g/b]
-byte pics[2][49][3] = { 
+//pics[num][pixel][r/g/b]
+byte pics[2][49][3] = {
                         { //pic 1
                           {255, 0, 0}, {255, 0, 0}, {255, 0, 0}, {255, 0, 0}, {255, 0, 0}, {255, 0, 0}, {255, 0, 0},
                           {255, 0, 0}, {255, 0, 0}, {255, 0, 0}, {255, 0, 0}, {255, 0, 0}, {255, 0, 0}, {255, 0, 0},
@@ -33,7 +33,7 @@ void setup() {
 
   strip.begin();
   strip.show();
-  
+
   clearScreen();
   delay(1000);
 }
@@ -46,7 +46,7 @@ void loop() {
 
       strip.setPixelColor(j, pics[i][j][0], pics[i][j][1], pics[i][j][2]);
       strip.show();
-      
+
     }
 
     delay(picDelay);
